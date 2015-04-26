@@ -521,6 +521,7 @@ public class PlayField extends JPanel implements ActionListener
                        }
 
                     }
+                    y = y-1;
                 }
             }
         }
