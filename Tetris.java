@@ -36,7 +36,6 @@ public class Tetris extends JFrame
     @Override
     public void paint(Graphics g)
     {
-        playField.paintComponent(playField.getGraphics());
         playField.paint(g);
     }
     

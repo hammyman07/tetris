@@ -474,7 +474,7 @@ public class PlayField extends JPanel implements ActionListener
     @Override
     public void actionPerformed(ActionEvent e) 
     {
-/*        if (!gameOver)
+        if (!gameOver)
         {
             if (hasLanded)
             {
@@ -513,7 +513,7 @@ public class PlayField extends JPanel implements ActionListener
         {
             hidePlayField();
             Tetris.gameState = highScores;
-        }*/
+        }
     }
     
     class KeyPresses extends KeyAdapter 
