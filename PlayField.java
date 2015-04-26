@@ -385,7 +385,7 @@ public class PlayField extends JPanel implements ActionListener
                 setPieceToBoard(false);
                 timer.stop();
                 
-                // clearLines();
+                clearLines();
                 
                 // Has a Square landed in the deployment zone? If so, game over
                 if (y >= (playFieldHeight - 2))
@@ -470,6 +470,117 @@ public class PlayField extends JPanel implements ActionListener
             }
         }
     }
+    
+    public void clearLines()
+    {
+        // Check each Y and X for occupied squares on the playfield
+        //If all square are occupied then clear the playfield
+        //System.out.println("Inside clear Lines");
+        int multiplier = 0;//multiplier variable applied to clearing a line 
+        boolean isCleared = false;
+        int x;
+        int y;
+        int x1;
+        int y1;
+        for ( y = 0; y < playFieldHeight; y++  )
+        {
+            //check if each horizontal is occupied
+            // System.out.println("Inside the Loop + Y = " + y);
+            isCleared = true;
+            for ( x = 0; x <playFieldWidth; x++)
+            {
+                //if any x is not occupied then move onto to the next y line
+                if(   playField[x][y].isOccupied() == false)
+                {
+                   //  System.out.println("Inside the if: check for is cleared");
+                   isCleared = false;
+                }
+
+                //If all squares on the line are occupied up the multiplier which is used to calculate score 
+                // and used for lines cleared
+                if( isCleared == true && x == playFieldWidth-1)
+                {
+                    multiplier = multiplier + 1;
+                   // System.out.println("Resetting the boxes");
+                    //reset all the squares on the line to default color                      
+                    for(x1 = 0; x1 < playFieldWidth ; x1 ++){
+                       playField[x1][y].setOccupied(false);
+                       playField[x1][y].setColor(Color.BLACK);
+                                                           }
+                    //reset all the square on the line above the line cleared to drop the pieces                      
+                    for(y1 = y+1; y1 < playFieldHeight; y1++)
+                    {
+
+                       for(x1 = 0; x1 < playFieldWidth ; x1++)
+                       {
+                      // System.out.println("Get ready were inside at Y:" + y1 + "X1: " + x1);
+                       playField[x1][y1-1].setOccupied(playField[x1][y1].isOccupied());
+                       playField[x1][y1-1].setColor(playField[x1][y1].getColor());
+                       playField[x1][y1].setOccupied(false);
+                       playField[x1][y1].setColor(Color.BLACK);
+                       }
+
+                    }
+                }
+            }
+        }
+        
+        //System.out.println("Outside the loop");
+        //Update score/ level when multiplier is >0
+        if(multiplier > 0 )
+        {
+            updateGameStats(multiplier);
+        }
+    }
+    
+    public void updateGameStats(int multiplier)
+    {
+        int newPoints = 0; // used to get the amount of points that is being added to curren score
+        //Update the # of lineCleared
+        linesCleared = linesCleared + multiplier;
+        //Update the level if applicable
+        switch(linesCleared)
+        {
+            case 100: level = 1; break;
+            case 200: level = 2; break;
+            case 300: level = 3; break;
+            case 400: level = 4; break;
+            case 500: level = 5; break;
+            case 600: level = 6; break;
+            case 700: level = 7; break;
+            case 800: level = 8; break;
+            case 900: level = 9; break;
+            case 1000: level = 10; break;
+            case 1100: level = 11; break;
+            case 1200: level = 12; break;
+            case 1300: level = 13; break;
+            case 1400: level = 14; break;
+            case 1500: level = 15; break;
+            case 1600: level = 16; break;
+            case 1700: level = 17; break;
+            case 1800: level = 18; break;
+            case 1900: level = 19; break;    
+        }
+        
+        //Update the score
+        switch(multiplier)
+        {
+            case 1: newPoints = 40 * ( level + 1); break;
+            case 2: newPoints = 100 * ( level + 1); break;  
+            case 3: newPoints = 300 * ( level + 1); break;  
+            case 4: newPoints = 1200 * ( level + 1); break;  
+        }
+
+        //Testing scoring logic
+        score = score + newPoints;
+        System.out.println("Your score is " + score);
+        System.out.println("Your # of lines cleared is " + linesCleared);
+        System.out.println("Your level is " + level);
+        //Update what is displayed
+        linesLabel.setText("Lines: " + linesCleared);
+        levelLabel.setText("Level: " + level);
+        scoreLabel.setText("Score: " + score);
+    }
        
     @Override
     public void actionPerformed(ActionEvent e) 
@@ -481,7 +592,7 @@ public class PlayField extends JPanel implements ActionListener
                 // If the piece has landed, lock it on the game board as active = false
                 setPieceToBoard(false);
                 
-                // clearLines();
+                clearLines();
                 
                 // Check for a gameOver condition -- Might be redudant
                 for (int y = playFieldHeight - 2; y < playFieldHeight; y++)
